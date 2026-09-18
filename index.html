@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>For You ❤️</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #fff1f5, #f4e9ff);
+  color: #241a22;
+}
+
+.card {
+  width: min(92vw, 430px);
+  padding: 44px 28px;
+  text-align: center;
+  background: #ffffffdf;
+  backdrop-filter: blur(14px);
+  border-radius: 30px;
+  box-shadow: 0 20px 60px #8c547733;
+}
+
+.slide {
+  display: none;
+  animation: up 0.45s ease;
+}
+
+.slide.active {
+  display: block;
+}
+
+.emoji {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 34px;
+  line-height: 1.2;
+  margin: 0 0 14px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #765f6b;
+  margin: 0;
+}
+
+button {
+  margin-top: 26px;
+  border: 0;
+  padding: 14px 23px;
+  border-radius: 999px;
+  background: #241a22;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+.heart {
+  font-size: 62px;
+  animation: pulse 1s infinite alternate;
+}
+
+.final {
+  font-size: 29px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.result {
+  font-size: 25px;
+  font-weight: 750;
+  line-height: 1.35;
+  margin-top: 12px;
+}
+
+.spark {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  animation: fall 2.5s linear forwards;
+}
+
+@keyframes pulse {
+  to {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-10vh);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- SLIDE 1 -->
+  <div class="slide active" id="s1">
+
+    <div class="emoji">👀</div>
+
+    <h1>
+      Well tbh… I'm gonna give you a 9/10.
+    </h1>
+
+    <p>
+      Don't ask why yet. 😌
+    </p>
+
+    <button onclick="trackClick('Why not 10?'); show(2)">
+      Why not 10? →
+    </button>
+
+  </div>
+
+
+  <!-- SLIDE 2 -->
+  <div class="slide" id="s2">
+
+    <div class="emoji">🤭</div>
+
+    <h1>
+      Because…
+    </h1>
+
+    <p>
+      I'm leaving that <b>1</b> point for someone.
+    </p>
+
+    <button onclick="revealOne()" id="whoButton">
+      Wait… who? 👀
+    </button>
+
+    <div id="oneReveal" style="display:none; margin-top:24px;">
+
+      <div class="heart">
+        ❤️
+      </div>
+
+      <div class="final">
+        Me. I'm the 1 you need. 😉
+      </div>
+
+      <button onclick="trackClick('What is next?'); show(3)">
+        Okay… what's next? →
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- SLIDE 3 -->
+  <div class="slide" id="s3">
+
+    <div class="emoji">
+      ☕🥂
+    </div>
+
+    <h1>
+      So… should we fix that missing 1? 😏
+    </h1>
+
+    <button onclick="answer(true)">
+      Yes 👀
+    </button>
+
+    <button onclick="answer(false)">
+      No 😌
+    </button>
+
+
+    <!-- YES RESPONSE -->
+    <div id="yesResult" style="display:none; margin-top:22px;">
+
+      <div class="result">
+        Then I guess we have a coffee date to plan. ☕😉
+      </div>
+
+      <p style="margin-top:10px;">
+        Coffee, drinks… you pick. ❤️
+      </p>
+
+    </div>
+
+
+    <!-- NO RESPONSE -->
+    <div id="noResult" style="display:none; margin-top:22px;">
+
+      <div class="result">
+        Fair enough 😌
+      </div>
+
+      <p style="margin-top:10px;">
+        I'll keep that 1 point pending. 😉
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   TRACKING
+   ========================================= */
+
+const TRACKING_URL =
+  "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+
+/* =========================================
+   PERSON ID FROM LINK
+   ========================================= */
+
+const params =
+  new URLSearchParams(window.location.search);
+
+const personId =
+  params.get("id") || "unknown";
+
+
+/* =========================================
+   SEND TRACKING DATA
+   ========================================= */
+
+function track(event, detail = "") {
+
+  if (
+    !TRACKING_URL ||
+    TRACKING_URL.includes("PASTE_YOUR_")
+  ) {
+    return;
+  }
+
+  const data = {
+
+    id: personId,
+
+    event: event,
+
+    detail: detail,
+
+    page: window.location.href,
+
+    timestamp: new Date().toISOString()
+
+  };
+
+  fetch(TRACKING_URL, {
+
+    method: "POST",
+
+    mode: "no-cors",
+
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+
+    body: JSON.stringify(data),
+
+    keepalive: true
+
+  }).catch(function() {});
+
+}
+
+
+/* =========================================
+   PAGE VIEW
+   ========================================= */
+
+track(
+  "viewed",
+  "Opened pickup page"
+);
+
+
+/* =========================================
+   SLIDE TRACKING
+   ========================================= */
+
+function trackSlide(n) {
+
+  track(
+    "slide_view",
+    "Slide " + n
+  );
+
+}
+
+
+/* =========================================
+   BUTTON TRACKING
+   ========================================= */
+
+function trackClick(name) {
+
+  track(
+    "click",
+    name
+  );
+
+}
+
+
+/* =========================================
+   ANSWER TRACKING
+   ========================================= */
+
+function trackAnswer(answer) {
+
+  track(
+    "answer",
+    answer
+  );
+
+}
+
+
+/* =========================================
+   SLIDE NAVIGATION
+   ========================================= */
+
+function show(n) {
+
+  document
+    .querySelectorAll(".slide")
+    .forEach(function(slide) {
+
+      slide.classList.remove("active");
+
+    });
+
+  document
+    .getElementById("s" + n)
+    .classList.add("active");
+
+  trackSlide(n);
+
+}
+
+
+/* =========================================
+   REVEAL THE "1"
+   ========================================= */
+
+function revealOne() {
+
+  trackClick(
+    "Wait… who?"
+  );
+
+  document
+    .getElementById("oneReveal")
+    .style.display = "block";
+
+  document
+    .getElementById("whoButton")
+    .style.display = "none";
+
+}
+
+
+/* =========================================
+   YES / NO
+   ========================================= */
+
+function answer(yes) {
+
+  trackAnswer(
+    yes ? "Yes 👀" : "No 😌"
+  );
+
+  document
+    .getElementById("yesResult")
+    .style.display =
+      yes ? "block" : "none";
+
+  document
+    .getElementById("noResult")
+    .style.display =
+      yes ? "none" : "block";
+
+  if (yes) {
+
+    celebrate();
+
+  }
+
+}
+
+
+/* =========================================
+   YES ANIMATION
+   ========================================= */
+
+function celebrate() {
+
+  for (let i = 0; i < 22; i++) {
+
+    const s =
+      document.createElement("div");
+
+    s.className = "spark";
+
+    s.textContent =
+      ["❤️", "✨", "💖", "💕", "☕"][i % 5];
+
+    s.style.left =
+      Math.random() * 100 + "vw";
+
+    s.style.animationDelay =
+      Math.random() * 0.7 + "s";
+
+    document.body.appendChild(s);
+
+    setTimeout(function() {
+
+      s.remove();
+
+    }, 3200);
+
+  }
+
+}
+
+
+/* =========================================
+   TRACK WHEN PAGE BECOMES INACTIVE
+   ========================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  function() {
+
+    if (
+      document.visibilityState === "hidden"
+    ) {
+
+      track(
+        "left_or_backgrounded",
+        "Page became inactive"
+      );
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
