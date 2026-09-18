@@ -1,11 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>For You ❤️</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -13,273 +15,483 @@
 body {
   margin: 0;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fde7f0,
+      #eadcf8
+    );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   overflow: hidden;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #fff1f5, #f4e9ff);
-  color: #241a22;
 }
 
+
+/* =========================
+   MAIN CARD
+========================= */
+
 .card {
-  width: min(92vw, 430px);
-  padding: 44px 28px;
+
+  width: calc(100% - 36px);
+  max-width: 640px;
+
+  min-height: 620px;
+
+  background: rgba(255,255,255,0.94);
+
+  border-radius: 42px;
+
+  padding: 70px 35px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   text-align: center;
-  background: #ffffffdf;
-  backdrop-filter: blur(14px);
-  border-radius: 30px;
-  box-shadow: 0 20px 60px #8c547733;
+
+  box-shadow:
+    0 25px 70px rgba(70, 30, 60, 0.15);
 }
+
+
+/* =========================
+   SLIDES
+========================= */
 
 .slide {
   display: none;
-  animation: up 0.45s ease;
+  width: 100%;
 }
 
 .slide.active {
   display: block;
 }
 
-.emoji {
-  font-size: 48px;
-  margin-bottom: 8px;
+
+/* =========================
+   EYES
+========================= */
+
+.eyes {
+  font-size: 58px;
+  margin-bottom: 25px;
 }
+
+
+/* =========================
+   HEADINGS
+========================= */
 
 h1 {
-  font-size: 34px;
-  line-height: 1.2;
-  margin: 0 0 14px;
+
+  margin: 0 auto 25px;
+
+  max-width: 520px;
+
+  font-size: clamp(42px, 7vw, 64px);
+
+  line-height: 1.08;
+
+  color: #211c23;
+
+  font-weight: 700;
 }
 
-p {
-  font-size: 18px;
-  line-height: 1.5;
-  color: #765f6b;
-  margin: 0;
+
+/* =========================
+   SUBTEXT
+========================= */
+
+.subtitle {
+
+  font-size: 28px;
+
+  line-height: 1.4;
+
+  color: #766b75;
+
+  margin-bottom: 42px;
 }
+
+
+/* =========================
+   BUTTON
+========================= */
 
 button {
-  margin-top: 26px;
-  border: 0;
-  padding: 14px 23px;
-  border-radius: 999px;
-  background: #241a22;
+
+  border: none;
+
+  background: #211c23;
+
   color: white;
-  font-size: 16px;
+
+  font-size: 22px;
+
+  padding: 20px 38px;
+
+  border-radius: 50px;
+
   cursor: pointer;
-  margin-left: 5px;
-  margin-right: 5px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 25px rgba(33,28,35,0.2);
 }
 
 button:active {
+
   transform: scale(0.96);
 }
 
-.heart {
-  font-size: 62px;
-  animation: pulse 1s infinite alternate;
+
+/* =========================
+   REVEAL
+========================= */
+
+.reveal {
+
+  display: none;
+
+  font-size: 34px;
+
+  font-weight: 700;
+
+  color: #211c23;
+
+  margin: 30px 0;
 }
 
-.final {
-  font-size: 29px;
-  font-weight: 800;
-  line-height: 1.35;
+
+/* =========================
+   YES / NO BUTTONS
+========================= */
+
+.answer-buttons {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  flex-wrap: wrap;
 }
+
+.answer-buttons button {
+
+  min-width: 130px;
+}
+
+.yes {
+
+  background: #211c23;
+}
+
+.no {
+
+  background: #eee8ed;
+
+  color: #211c23;
+}
+
+
+/* =========================
+   RESULTS
+========================= */
 
 .result {
-  font-size: 25px;
-  font-weight: 750;
-  line-height: 1.35;
-  margin-top: 12px;
+
+  display: none;
+
+  margin-top: 35px;
+
+  font-size: 27px;
+
+  line-height: 1.4;
+
+  color: #211c23;
 }
+
+
+/* =========================
+   SPARKS
+========================= */
 
 .spark {
+
   position: fixed;
-  font-size: 22px;
+
+  top: -40px;
+
+  font-size: 30px;
+
   pointer-events: none;
-  animation: fall 2.5s linear forwards;
-}
 
-@keyframes pulse {
-  to {
-    transform: scale(1.12);
-  }
-}
+  animation:
+    fall 3.2s linear forwards;
 
-@keyframes up {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  z-index: 9999;
 }
 
 @keyframes fall {
-  from {
-    transform: translateY(-10vh);
+
+  0% {
+
+    transform:
+      translateY(0)
+      rotate(0deg);
+
     opacity: 1;
   }
 
-  to {
-    transform: translateY(110vh) rotate(360deg);
+  100% {
+
+    transform:
+      translateY(110vh)
+      rotate(360deg);
+
     opacity: 0;
   }
 }
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .card {
+
+    min-height: 640px;
+
+    padding:
+      55px 24px;
+
+    border-radius: 38px;
+  }
+
+  .eyes {
+
+    font-size: 48px;
+  }
+
+  h1 {
+
+    font-size: 42px;
+  }
+
+  .subtitle {
+
+    font-size: 23px;
+  }
+
+  button {
+
+    font-size: 20px;
+
+    padding:
+      18px 30px;
+  }
+
+  .reveal {
+
+    font-size: 29px;
+  }
+
+  .result {
+
+    font-size: 23px;
+  }
+}
+
 </style>
 </head>
 
+
 <body>
+
 
 <div class="card">
 
-  <!-- SLIDE 1 -->
-  <div class="slide active" id="s1">
 
-    <div class="emoji">👀</div>
+  <!-- =========================
+       SLIDE 1
+  ========================== -->
+
+  <div
+    class="slide active"
+    id="slide1"
+  >
+
+    <div class="eyes">
+      👀
+    </div>
 
     <h1>
       Well tbh… I'm gonna give you a 9/10.
     </h1>
 
-    <p>
+    <div class="subtitle">
       Don't ask why yet. 😌
-    </p>
+    </div>
 
-    <button onclick="trackClick('Why not 10?'); show(2)">
+    <button
+      onclick="nextSlide()"
+    >
       Why not 10? →
     </button>
 
   </div>
 
 
-  <!-- SLIDE 2 -->
-  <div class="slide" id="s2">
 
-    <div class="emoji">🤭</div>
+  <!-- =========================
+       SLIDE 2
+  ========================== -->
+
+  <div
+    class="slide"
+    id="slide2"
+  >
+
+    <div class="eyes">
+      👀
+    </div>
 
     <h1>
-      Because…
+      Because… I'm leaving that 1 point for someone.
     </h1>
 
-    <p>
-      I'm leaving that <b>1</b> point for someone.
-    </p>
-
-    <button onclick="revealOne()" id="whoButton">
+    <button
+      onclick="reveal()"
+    >
       Wait… who? 👀
     </button>
 
-    <div id="oneReveal" style="display:none; margin-top:24px;">
 
-      <div class="heart">
-        ❤️
-      </div>
-
-      <div class="final">
-        Me. I'm the 1 you need. 😉
-      </div>
-
-      <button onclick="trackClick('Okay… what is next?'); show(3)">
-        Okay… what's next? →
-      </button>
-
+    <div
+      class="reveal"
+      id="reveal"
+    >
+      Me. I'm the 1 you need. 😉
     </div>
+
+
+    <button
+      id="nextButton"
+      onclick="goNext()"
+      style="display:none;"
+    >
+      Okay… what's next? →
+    </button>
 
   </div>
 
 
-  <!-- SLIDE 3 -->
-  <div class="slide" id="s3">
 
-    <div class="emoji">
-      ☕🥂
+  <!-- =========================
+       SLIDE 3
+  ========================== -->
+
+  <div
+    class="slide"
+    id="slide3"
+  >
+
+    <div class="eyes">
+      🫣
     </div>
 
     <h1>
       So… should we fix that missing 1? 😏
     </h1>
 
-    <button onclick="answer(true)">
-      Yes 👀
-    </button>
 
-    <button onclick="answer(false)">
-      No 😌
-    </button>
+    <div class="answer-buttons">
+
+      <button
+        class="yes"
+        onclick="answer(true)"
+      >
+        Yes ❤️
+      </button>
 
 
-    <!-- YES RESPONSE -->
-    <div id="yesResult" style="display:none; margin-top:22px;">
-
-      <div class="result">
-        Then I guess we have a coffee date to plan. ☕😉
-      </div>
-
-      <p style="margin-top:10px;">
-        Coffee, drinks… you pick. ❤️
-      </p>
+      <button
+        class="no"
+        onclick="answer(false)"
+      >
+        No 😌
+      </button>
 
     </div>
 
 
-    <!-- NO RESPONSE -->
-    <div id="noResult" style="display:none; margin-top:22px;">
+    <div
+      class="result"
+      id="yesResult"
+    >
+      Then I guess we're getting coffee. ☕❤️
+    </div>
 
-      <div class="result">
-        Fair enough 😌
-      </div>
 
-      <p style="margin-top:10px;">
-        I'll keep that 1 point pending. 😉
-      </p>
-
+    <div
+      class="result"
+      id="noResult"
+    >
+      Fair enough… 😌
     </div>
 
   </div>
 
+
 </div>
+
 
 
 <script>
 
-/* =====================================================
-   TRACKING CONNECTION
-   ===================================================== */
+
+// ==================================================
+// GOOGLE SHEETS TRACKING URL
+// ==================================================
 
 const TRACKING_URL =
 "https://script.google.com/macros/s/AKfycbwBLNXoBewpRakYX9uM7gR9r_9GT6QxyHVB_5ZNG3M4qo5sdqWeoealIP2g21wk8cMH0A/exec";
 
 
-/* =====================================================
-   PERSON ID
-   ===================================================== */
-
-/*
-   Use a unique ID in the link.
-
-   Example:
-
-   ?id=person01
-
-   ?id=hinge01
-
-   ?id=girl01
-*/
+// ==================================================
+// GET PERSON / LINK ID
+// ==================================================
 
 const params =
-new URLSearchParams(window.location.search);
+  new URLSearchParams(
+    window.location.search
+  );
 
 const personId =
-params.get("id") || "unknown";
+  params.get("id") || "unknown";
 
 
-/* =====================================================
-   TRACKING FUNCTION
-   ===================================================== */
+// ==================================================
+// TRACKING FUNCTION
+// ==================================================
 
 function track(event, detail) {
 
@@ -293,7 +505,8 @@ function track(event, detail) {
 
     page: window.location.href,
 
-    timestamp: new Date().toISOString()
+    timestamp:
+      new Date().toISOString()
 
   };
 
@@ -305,153 +518,191 @@ function track(event, detail) {
     mode: "no-cors",
 
     headers: {
-      "Content-Type": "text/plain;charset=utf-8"
+
+      "Content-Type":
+        "text/plain;charset=utf-8"
+
     },
 
-    body: JSON.stringify(data),
+    body:
+      JSON.stringify(data),
 
     keepalive: true
 
-  }).catch(function() {
+  }).catch(function () {});
 
-    /* Ignore tracking errors so the page still works */
+}
+
+
+// ==================================================
+// SHOW SLIDE
+// ==================================================
+
+function showSlide(number) {
+
+  const slides =
+    document.querySelectorAll(".slide");
+
+
+  slides.forEach(function(slide) {
+
+    slide.classList.remove("active");
 
   });
 
-}
 
-
-/* =====================================================
-   PAGE VIEW
-   ===================================================== */
-
-track(
-  "viewed",
-  "Opened pickup page"
-);
-
-
-/* =====================================================
-   BUTTON CLICK
-   ===================================================== */
-
-function trackClick(name) {
-
-  track(
-    "click",
-    name
-  );
-
-}
-
-
-/* =====================================================
-   SLIDE VIEW
-   ===================================================== */
-
-function trackSlide(number) {
-
-  track(
-    "slide_view",
-    "Slide " + number
-  );
-
-}
-
-
-/* =====================================================
-   ANSWER
-   ===================================================== */
-
-function trackAnswer(answer) {
-
-  track(
-    "answer",
-    answer
-  );
-
-}
-
-
-/* =====================================================
-   SLIDE NAVIGATION
-   ===================================================== */
-
-function show(number) {
-
-  document
-    .querySelectorAll(".slide")
-    .forEach(function(slide) {
-
-      slide.classList.remove("active");
-
-    });
-
-
-  document
-    .getElementById("s" + number)
-    .classList.add("active");
-
-
-  trackSlide(number);
-
-}
-
-
-/* =====================================================
-   REVEAL THE 1
-   ===================================================== */
-
-function revealOne() {
-
-  trackClick(
-    "Wait… who? 👀"
-  );
-
-
-  document
-    .getElementById("oneReveal")
-    .style.display = "block";
-
-
-  document
-    .getElementById("whoButton")
-    .style.display = "none";
-
-}
-
-
-/* =====================================================
-   YES / NO
-   ===================================================== */
-
-function answer(yes) {
-
-  if (yes) {
-
-    trackAnswer(
-      "YES"
+  const selected =
+    document.getElementById(
+      "slide" + number
     );
 
-  } else {
 
-    trackAnswer(
-      "NO"
+  if (selected) {
+
+    selected.classList.add("active");
+
+  }
+
+
+  // Track slide views
+
+  if (number === 2) {
+
+    track(
+      "slide_view",
+      "Slide 2"
     );
 
   }
 
 
-  document
-    .getElementById("yesResult")
-    .style.display =
-      yes ? "block" : "none";
+  if (number === 3) {
+
+    track(
+      "slide_view",
+      "Slide 3"
+    );
+
+  }
+
+}
 
 
-  document
-    .getElementById("noResult")
-    .style.display =
-      yes ? "none" : "block";
+// ==================================================
+// SLIDE 1 → SLIDE 2
+// ==================================================
+
+function nextSlide() {
+
+  track(
+    "click",
+    "Why not 10?"
+  );
+
+
+  showSlide(2);
+
+}
+
+
+// ==================================================
+// REVEAL SLIDE 2
+// ==================================================
+
+function reveal() {
+
+  track(
+    "click",
+    "Wait… who? 👀"
+  );
+
+
+  const revealText =
+    document.getElementById(
+      "reveal"
+    );
+
+
+  if (revealText) {
+
+    revealText.style.display =
+      "block";
+
+  }
+
+
+  const nextButton =
+    document.getElementById(
+      "nextButton"
+    );
+
+
+  if (nextButton) {
+
+    nextButton.style.display =
+      "inline-block";
+
+  }
+
+}
+
+
+// ==================================================
+// SLIDE 2 → SLIDE 3
+// ==================================================
+
+function goNext() {
+
+  track(
+    "click",
+    "Okay… what's next?"
+  );
+
+
+  showSlide(3);
+
+}
+
+
+// ==================================================
+// YES / NO ANSWER
+// ==================================================
+
+function answer(yes) {
+
+  trackAnswer(yes);
+
+
+  const yesResult =
+    document.getElementById(
+      "yesResult"
+    );
+
+
+  const noResult =
+    document.getElementById(
+      "noResult"
+    );
+
+
+  if (yesResult) {
+
+    yesResult.style.display =
+      yes
+        ? "block"
+        : "none";
+
+  }
+
+
+  if (noResult) {
+
+    noResult.style.display =
+      yes
+        ? "none"
+        : "block";
+
+  }
 
 
   if (yes) {
@@ -463,13 +714,36 @@ function answer(yes) {
 }
 
 
-/* =====================================================
-   YES ANIMATION
-   ===================================================== */
+// ==================================================
+// TRACK YES / NO
+// ==================================================
+
+function trackAnswer(yes) {
+
+  track(
+
+    "answer",
+
+    yes
+      ? "YES 👀"
+      : "NO 😌"
+
+  );
+
+}
+
+
+// ==================================================
+// YES ANIMATION
+// ==================================================
 
 function celebrate() {
 
-  for (let i = 0; i < 22; i++) {
+  for (
+    let i = 0;
+    i < 22;
+    i++
+  ) {
 
     const spark =
       document.createElement("div");
@@ -479,8 +753,15 @@ function celebrate() {
       "spark";
 
 
-    spark.textContent =
-      ["❤️", "✨", "💖", "💕", "☕"][i % 5];
+    spark.textContent = [
+
+      "❤️",
+      "✨",
+      "💕",
+      "💗",
+      "💖"
+
+    ][i % 5];
 
 
     spark.style.left =
@@ -496,126 +777,65 @@ function celebrate() {
     );
 
 
-    setTimeout(function() {
+    setTimeout(
+      function() {
 
-      spark.remove();
+        spark.remove();
 
-    }, 3200);
+      },
+      3200
+    );
 
   }
 
 }
 
 
-/* =====================================================
-   PAGE BECOMES INACTIVE
-   ===================================================== */
+// ==================================================
+// TRACK PAGE OPEN
+// ==================================================
+
+track(
+
+  "viewed",
+
+  "Opened pickup page"
+
+);
+
+
+// ==================================================
+// TRACK WHEN PAGE BECOMES INACTIVE
+// ==================================================
 
 document.addEventListener(
+
   "visibilitychange",
+
   function() {
 
     if (
-      document.visibilityState === "hidden"
+      document.visibilityState ===
+      "hidden"
     ) {
 
       track(
+
         "page_inactive",
+
         "Page became inactive"
+
       );
 
     }
 
   }
+
 );
+
 
 </script>
 
-</body>
-</html>
-function answer(yes) {
-
-  trackAnswer(
-    yes ? "Yes 👀" : "No 😌"
-  );
-
-  document
-    .getElementById("yesResult")
-    .style.display =
-      yes ? "block" : "none";
-
-  document
-    .getElementById("noResult")
-    .style.display =
-      yes ? "none" : "block";
-
-  if (yes) {
-
-    celebrate();
-
-  }
-
-}
-
-
-/* =========================================
-   YES ANIMATION
-   ========================================= */
-
-function celebrate() {
-
-  for (let i = 0; i < 22; i++) {
-
-    const s =
-      document.createElement("div");
-
-    s.className = "spark";
-
-    s.textContent =
-      ["❤️", "✨", "💖", "💕", "☕"][i % 5];
-
-    s.style.left =
-      Math.random() * 100 + "vw";
-
-    s.style.animationDelay =
-      Math.random() * 0.7 + "s";
-
-    document.body.appendChild(s);
-
-    setTimeout(function() {
-
-      s.remove();
-
-    }, 3200);
-
-  }
-
-}
-
-
-/* =========================================
-   TRACK WHEN PAGE BECOMES INACTIVE
-   ========================================= */
-
-document.addEventListener(
-  "visibilitychange",
-  function() {
-
-    if (
-      document.visibilityState === "hidden"
-    ) {
-
-      track(
-        "left_or_backgrounded",
-        "Page became inactive"
-      );
-
-    }
-
-  }
-);
-
-</script>
 
 </body>
 </html>
