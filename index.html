@@ -183,7 +183,7 @@ button:active {
         Me. I'm the 1 you need. 😉
       </div>
 
-      <button onclick="trackClick('What is next?'); show(3)">
+      <button onclick="trackClick('Okay… what is next?'); show(3)">
         Okay… what's next? →
       </button>
 
@@ -246,37 +246,42 @@ button:active {
 
 <script>
 
-/* =========================================
-   TRACKING
-   ========================================= */
+/* =====================================================
+   TRACKING CONNECTION
+   ===================================================== */
 
 const TRACKING_URL =
-  "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+"https://script.google.com/macros/s/AKfycbwBLNXoBewpRakYX9uM7gR9r_9GT6QxyHVB_5ZNG3M4qo5sdqWeoealIP2g21wk8cMH0A/exec";
 
 
-/* =========================================
-   PERSON ID FROM LINK
-   ========================================= */
+/* =====================================================
+   PERSON ID
+   ===================================================== */
+
+/*
+   Use a unique ID in the link.
+
+   Example:
+
+   ?id=person01
+
+   ?id=hinge01
+
+   ?id=girl01
+*/
 
 const params =
-  new URLSearchParams(window.location.search);
+new URLSearchParams(window.location.search);
 
 const personId =
-  params.get("id") || "unknown";
+params.get("id") || "unknown";
 
 
-/* =========================================
-   SEND TRACKING DATA
-   ========================================= */
+/* =====================================================
+   TRACKING FUNCTION
+   ===================================================== */
 
-function track(event, detail = "") {
-
-  if (
-    !TRACKING_URL ||
-    TRACKING_URL.includes("PASTE_YOUR_")
-  ) {
-    return;
-  }
+function track(event, detail) {
 
   const data = {
 
@@ -284,13 +289,14 @@ function track(event, detail = "") {
 
     event: event,
 
-    detail: detail,
+    detail: detail || "",
 
     page: window.location.href,
 
     timestamp: new Date().toISOString()
 
   };
+
 
   fetch(TRACKING_URL, {
 
@@ -306,14 +312,18 @@ function track(event, detail = "") {
 
     keepalive: true
 
-  }).catch(function() {});
+  }).catch(function() {
+
+    /* Ignore tracking errors so the page still works */
+
+  });
 
 }
 
 
-/* =========================================
+/* =====================================================
    PAGE VIEW
-   ========================================= */
+   ===================================================== */
 
 track(
   "viewed",
@@ -321,23 +331,9 @@ track(
 );
 
 
-/* =========================================
-   SLIDE TRACKING
-   ========================================= */
-
-function trackSlide(n) {
-
-  track(
-    "slide_view",
-    "Slide " + n
-  );
-
-}
-
-
-/* =========================================
-   BUTTON TRACKING
-   ========================================= */
+/* =====================================================
+   BUTTON CLICK
+   ===================================================== */
 
 function trackClick(name) {
 
@@ -349,9 +345,23 @@ function trackClick(name) {
 }
 
 
-/* =========================================
-   ANSWER TRACKING
-   ========================================= */
+/* =====================================================
+   SLIDE VIEW
+   ===================================================== */
+
+function trackSlide(number) {
+
+  track(
+    "slide_view",
+    "Slide " + number
+  );
+
+}
+
+
+/* =====================================================
+   ANSWER
+   ===================================================== */
 
 function trackAnswer(answer) {
 
@@ -363,11 +373,11 @@ function trackAnswer(answer) {
 }
 
 
-/* =========================================
+/* =====================================================
    SLIDE NAVIGATION
-   ========================================= */
+   ===================================================== */
 
-function show(n) {
+function show(number) {
 
   document
     .querySelectorAll(".slide")
@@ -377,28 +387,32 @@ function show(n) {
 
     });
 
+
   document
-    .getElementById("s" + n)
+    .getElementById("s" + number)
     .classList.add("active");
 
-  trackSlide(n);
+
+  trackSlide(number);
 
 }
 
 
-/* =========================================
-   REVEAL THE "1"
-   ========================================= */
+/* =====================================================
+   REVEAL THE 1
+   ===================================================== */
 
 function revealOne() {
 
   trackClick(
-    "Wait… who?"
+    "Wait… who? 👀"
   );
+
 
   document
     .getElementById("oneReveal")
     .style.display = "block";
+
 
   document
     .getElementById("whoButton")
@@ -407,10 +421,118 @@ function revealOne() {
 }
 
 
-/* =========================================
+/* =====================================================
    YES / NO
-   ========================================= */
+   ===================================================== */
 
+function answer(yes) {
+
+  if (yes) {
+
+    trackAnswer(
+      "YES"
+    );
+
+  } else {
+
+    trackAnswer(
+      "NO"
+    );
+
+  }
+
+
+  document
+    .getElementById("yesResult")
+    .style.display =
+      yes ? "block" : "none";
+
+
+  document
+    .getElementById("noResult")
+    .style.display =
+      yes ? "none" : "block";
+
+
+  if (yes) {
+
+    celebrate();
+
+  }
+
+}
+
+
+/* =====================================================
+   YES ANIMATION
+   ===================================================== */
+
+function celebrate() {
+
+  for (let i = 0; i < 22; i++) {
+
+    const spark =
+      document.createElement("div");
+
+
+    spark.className =
+      "spark";
+
+
+    spark.textContent =
+      ["❤️", "✨", "💖", "💕", "☕"][i % 5];
+
+
+    spark.style.left =
+      Math.random() * 100 + "vw";
+
+
+    spark.style.animationDelay =
+      Math.random() * 0.7 + "s";
+
+
+    document.body.appendChild(
+      spark
+    );
+
+
+    setTimeout(function() {
+
+      spark.remove();
+
+    }, 3200);
+
+  }
+
+}
+
+
+/* =====================================================
+   PAGE BECOMES INACTIVE
+   ===================================================== */
+
+document.addEventListener(
+  "visibilitychange",
+  function() {
+
+    if (
+      document.visibilityState === "hidden"
+    ) {
+
+      track(
+        "page_inactive",
+        "Page became inactive"
+      );
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
 function answer(yes) {
 
   trackAnswer(
